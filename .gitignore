@@ -1,0 +1,10 @@
+node_modules
+.turbo
+
+*log
+./firebase
+.emulators
+
+.vercel
+
+pm2.ecosystem.config.js

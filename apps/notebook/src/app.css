@@ -1,0 +1,130 @@
+/* Write your global styles here, in PostCSS syntax */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	html {
+		height: -webkit-fill-available;
+	}
+
+	body {
+		height: -webkit-fill-available;
+	}
+
+	/* If using React, set height on the root div as well */
+	#root {
+		height: -webkit-fill-available;
+	}
+
+	.border-tint {
+		@apply border-purple-600;
+	}
+
+	.bg-tint {
+		@apply bg-purple-600;
+	}
+
+	.bg-tint-gradient {
+		@apply bg-gradient-to-r from-purple-700 to-purple-300;
+	}
+
+	.text-tint {
+		@apply text-purple-600;
+	}
+
+	.text-tint-gradient {
+		@apply bg-tint-gradient bg-clip-text text-transparent;
+	}
+
+	.ring-tint {
+		@apply ring-purple-600;
+	}
+
+	.background-color {
+		@apply bg-white dark:bg-gray-800;
+	}
+
+	.secondary-background-color {
+		@apply bg-gray-100 dark:bg-gray-900;
+	}
+
+	.input-background-color {
+		@apply bg-gray-100 dark:bg-gray-900;
+	}
+
+	.text-color {
+		@apply text-gray-900 dark:text-white;
+	}
+
+	.secondary-text-color {
+		@apply text-gray-500 dark:text-gray-400;
+	}
+
+	.disabled-text-color {
+		@apply text-zinc-400 dark:text-gray-600;
+	}
+
+	.placeholder-color {
+		@apply placeholder-gray-300 dark:placeholder-gray-600;
+	}
+
+	.divide-color {
+		@apply divide-gray-200 dark:divide-gray-700;
+	}
+
+	.border-color {
+		@apply border-gray-200 dark:border-gray-700;
+	}
+
+	.hover-scale {
+		@apply transition duration-150 hover:z-10 hover:scale-125 hover:drop-shadow;
+		@apply disabled:hover:scale-100;
+	}
+
+	.hover-scale-sm {
+		@apply transition duration-150 hover:z-10 hover:scale-105 hover:drop-shadow;
+		@apply disabled:hover:scale-100;
+	}
+}
+
+@layer components {
+	.p-main {
+		@apply py-3 pl-6 pr-3;
+	}
+
+	.box {
+		@apply border-color border;
+	}
+
+	.input {
+		@apply border-b px-2 py-1;
+		@apply border-color background-color;
+		@apply placeholder-color;
+		@apply focus:border-tint focus:border-b-2 focus:outline-none;
+	}
+
+	.input-none {
+		@apply background-color;
+		@apply placeholder-color;
+		@apply focus:border-tint focus:border-b-2 focus:outline-none;
+	}
+
+	.input-box {
+		@apply rounded px-2 py-1;
+		@apply placeholder-color;
+		@apply box border-color background-color;
+		@apply focus:ring-tint focus:border-none focus:outline-none focus:ring-2;
+	}
+
+	.link-style-default {
+		@apply secondary-text-color;
+		@apply hover:text-gray-900 dark:hover:text-white;
+		@apply active:text-tint-gradient;
+		@apply disabled:text-opacity-30;
+	}
+
+	.button-style {
+		@apply link-style-default box border-color rounded-md px-2 py-1;
+	}
+}

@@ -1,0 +1,27 @@
+{
+	"$schema": "https://turbo.build/schema.json",
+	"tasks": {
+		"build": {
+			"dependsOn": ["db:generate", "^build"],
+			"outputs": ["dist/**", ".svelte-kit/**", ".vercel/**"]
+		},
+		"test": {
+			"dependsOn": []
+		},
+		"lint": {
+			"dependsOn": []
+		},
+		"dev": {
+			"dependsOn": ["db:generate", "build"],
+			"cache": false,
+			"persistent": true
+		},
+		"clean": {
+			"dependsOn": []
+		},
+		"db:generate": {
+			"dependsOn": ["^db:generate"],
+			"cache": false
+		}
+	}
+}
