@@ -32,7 +32,7 @@ jobs:
           cd apps/notebook
           pnpm install
       - name: Build
-        run: pnpm build --filter @leanny/notebook
+        run: pnpm build --filter @orenote/notebook
       - name: Create ssh key file on runner filesystem
         run: echo "$SSH_KEY" > ${{ runner.temp }}/key && chmod 600 ${{ runner.temp }}/key
         env:
