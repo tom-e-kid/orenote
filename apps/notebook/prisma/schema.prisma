@@ -68,3 +68,32 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
+
+type Content {
+  title String
+  raw   Json?
+}
+
+model Snapshot {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  sid       String   @unique
+  uid       String
+  content   Content
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  docId String @db.ObjectId
+  doc   Doc    @relation(fields: [docId], references: [id], onDelete: Cascade)
+}
+
+model Doc {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  did       String   @unique
+  uid       String
+  publicKey String?  @unique
+  content   Content
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  snapshots Snapshot[]
+}

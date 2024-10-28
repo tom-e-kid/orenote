@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
 
-	export let styles = 'background-color'
 	export let title = ''
+	export let styles = 'background-color'
 	export let drawerStyles = 'secondary-background-color'
 	export let open = true
 
@@ -23,26 +23,28 @@
 	})
 </script>
 
-<div class="relative h-[100vh] w-[100vw]">
+<div class="relative h-full w-full overflow-hidden">
 	<div class={`absolute left-0 top-0 z-20 h-[44px]`}>
-		<div class="flex h-full items-center space-x-3 p-3">
-			<button type="button" on:click={() => (open = !open)} class="hover-scale-sm">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					class="secondary-text-color size-5"
-				>
-					<rect x="2" y="2" width="20" height="18" rx="4" ry="4" />
-					<line x1="10" y1="2" x2="10" y2="20" />
-				</svg>
-			</button>
-			<span class="secondary-text-color pb-1 text-xl font-extralight drop-shadow">{title}</span>
-		</div>
+		<slot name="header" {md}>
+			<div class="flex h-full items-center space-x-3 p-3">
+				<button type="button" on:click={() => (open = !open)} class="hover-scale-sm">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						class="secondary-text-color size-5"
+					>
+						<rect x="2" y="2" width="20" height="18" rx="4" ry="4" />
+						<line x1="10" y1="2" x2="10" y2="20" />
+					</svg>
+				</button>
+				<span class="secondary-text-color pb-1 text-xl font-extralight drop-shadow">{title}</span>
+			</div>
+		</slot>
 	</div>
 	{#if md}
 		<div
@@ -51,7 +53,7 @@
 				: 'pointer-events-none'}"
 		>
 			<div class="h-[100svh] w-full">
-				<slot name="drawer">
+				<slot name="drawer" {md}>
 					<p class="p-3">Drawer</p>
 				</slot>
 			</div>
@@ -62,7 +64,7 @@
 				: 'left-0'}"
 		>
 			<div class="h-[100svh] w-full">
-				<slot>
+				<slot {md}>
 					<p class="p-3">Content</p>
 				</slot>
 			</div>
@@ -70,7 +72,7 @@
 	{:else}
 		<div class="h-[100svh] w-full {styles}">
 			<div class="h-full w-full">
-				<slot>
+				<slot {md}>
 					<p class="p-3">Content</p>
 				</slot>
 			</div>
@@ -87,7 +89,7 @@
 				: 'pointer-events-none -left-[256px]'}"
 		>
 			<div class="h-[100svh] w-full">
-				<slot name="drawer">
+				<slot name="drawer" {md}>
 					<p class="p-3">Drawer</p>
 				</slot>
 			</div>
