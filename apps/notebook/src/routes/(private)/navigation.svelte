@@ -82,7 +82,7 @@
 </script>
 
 <nav class="flex h-full flex-col px-2">
-	<header class="h-[44px]" />
+	<header class="h-[44px]"></header>
 	<section class="grow space-y-3 overflow-auto">
 		<h3 class="text-xs font-semibold">Docs</h3>
 		<ul class="space-y-1">
@@ -103,7 +103,7 @@
 		</ul>
 		<div class="flex items-center justify-center">
 			{#if docs.length < total}
-				<button on:click={loadMore} disabled={loading} class="button-style text-xs">
+				<button type="button" on:click={loadMore} disabled={loading} class="button-style text-xs">
 					{#if loading}Loading...{/if}
 					{#if !loading}Read More{/if}
 				</button>

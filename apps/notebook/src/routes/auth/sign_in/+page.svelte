@@ -24,9 +24,9 @@
 				</button>
 			</div>
 			<div class="flex items-center space-x-3">
-				<div class="border-color grow border-b" />
+				<div class="border-color grow border-b"></div>
 				<p class="secondary-text-color text-sm">or</p>
-				<div class="border-color grow border-b" />
+				<div class="border-color grow border-b"></div>
 			</div>
 			<div>
 				<button

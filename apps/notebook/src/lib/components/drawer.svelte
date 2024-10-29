@@ -27,7 +27,12 @@
 	<div class={`absolute left-0 top-0 z-20 h-[44px]`}>
 		<slot name="header" {md}>
 			<div class="flex h-full items-center space-x-3 p-3">
-				<button type="button" on:click={() => (open = !open)} class="hover-scale-sm">
+				<button
+					type="button"
+					on:click={() => (open = !open)}
+					class="hover-scale-sm"
+					aria-label="Toggle Drawer"
+				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						viewBox="0 0 24 24"
@@ -78,11 +83,14 @@
 			</div>
 		</div>
 		<button
+			type="button"
 			class="absolute left-0 top-0 h-full w-full bg-gray-700/50 transition-opacity duration-300 {open
 				? 'pointer-events-auto opacity-100'
 				: 'pointer-events-none opacity-0'}"
 			on:click={() => (open = false)}
-		></button>
+			aria-label="Background Dim"
+		>
+		</button>
 		<div
 			class="absolute top-0 flex h-full w-[256px] shadow-md transition-[left] duration-300 {drawerStyles} {open
 				? 'pointer-events-auto left-0'

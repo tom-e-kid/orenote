@@ -4,7 +4,12 @@
 
 <div class="relative h-full w-[256px]">
 	<span class="absolute left-3 top-1/2 flex -translate-y-1/2 items-center space-x-3">
-		<button type="button" on:click={() => (open = !open)} class="hover-scale-sm">
+		<button
+			type="button"
+			on:click={() => (open = !open)}
+			class="hover-scale-sm"
+			aria-label="Toggle Drawer"
+		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				viewBox="0 0 24 24"

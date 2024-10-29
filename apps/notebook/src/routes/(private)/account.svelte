@@ -32,8 +32,10 @@
 
 <div class="relative {open ? 'z-10' : 'z-0'}" bind:this={menu}>
 	<button
+		type="button"
 		class="z-0 flex h-[44px] w-full items-center space-x-2 rounded px-2 font-medium hover:bg-gray-200 hover:dark:bg-gray-800"
 		on:click={toggle}
+		aria-label="Accout Menu"
 	>
 		<span>
 			{#if session.user?.image}

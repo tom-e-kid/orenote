@@ -97,6 +97,6 @@
 </button>
 
 <div bind:this={floating} class="absolute z-50 {className} {pop ? 'block' : 'hidden'}">
-	<div bind:this={arrowEl} class="absolute h-[12px] w-[12px] rotate-45 bg-inherit" />
+	<div bind:this={arrowEl} class="absolute h-[12px] w-[12px] rotate-45 bg-inherit"></div>
 	<slot name="popover-content" />
 </div>

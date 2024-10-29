@@ -28,7 +28,7 @@
 </script>
 
 <div class="relative w-[max-content] {open ? 'z-10' : 'z-0'}" bind:this={menu}>
-	<button class="flex items-center" on:click={toggle}>
+	<button type="button" class="flex items-center" on:click={toggle} aria-label="Operation Menu">
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			fill="none"
@@ -51,8 +51,14 @@
 			: 'hidden'}"
 	>
 		<ul class="divide-color flex flex-col divide-y">
-			<button class="p-3 text-left" on:click={() => handleClick('duplicate')}>Duplicate</button>
-			<button class="p-3 text-left text-red-500" on:click={() => handleClick('delete')}>
+			<button type="button" class="p-3 text-left" on:click={() => handleClick('duplicate')}>
+				Duplicate
+			</button>
+			<button
+				type="button"
+				class="p-3 text-left text-red-500"
+				on:click={() => handleClick('delete')}
+			>
 				Delete
 			</button>
 		</ul>
