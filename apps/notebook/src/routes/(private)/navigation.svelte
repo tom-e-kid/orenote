@@ -21,10 +21,19 @@
 			if (!res.ok) throw new Error('Failed to fetch data')
 
 			const data = await res.json()
-			docs = [...docs, ...data.docs]
 			total = data.total
 			offset += limit
-			docsStore.set(docs)
+			docsStore.update((docs) => {
+				for (const doc of data.docs.reverse()) {
+					const index = docs.findIndex((d) => d.did === doc.did)
+					if (index !== -1) {
+						docs[index] = doc
+					} else {
+						docs.unshift(doc)
+					}
+				}
+				return docs
+			})
 		} catch (e) {
 			console.error(e)
 		} finally {
@@ -44,15 +53,22 @@
 		})
 		if (!res.ok) return
 		const data = await res.json()
-		docs = [data.doc, ...docs]
-		docsStore.set(docs)
+		docsStore.update((docs) => {
+			docs.unshift(data.doc)
+			return docs
+		})
 	}
 
 	const handleDelete = async (did: string) => {
 		const res = await fetch(`/api/docs/${did}`, { method: 'DELETE' })
 		if (!res.ok) return
-		docs = docs.filter((d) => d.did !== did)
-		docsStore.set(docs)
+		docsStore.update((docs) => {
+			const index = docs.findIndex((d) => d.did === did)
+			if (index !== -1) {
+				docs.splice(index, 1)
+			}
+			return docs
+		})
 		await goto('/')
 	}
 
