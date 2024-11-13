@@ -10,8 +10,8 @@
 	<svelte:fragment slot="header">
 		<Title bind:open />
 	</svelte:fragment>
-	<svelte:fragment slot="drawer">
-		<Navigation />
+	<svelte:fragment slot="drawer" let:md>
+		<Navigation {md} bind:open />
 	</svelte:fragment>
 	<svelte:fragment>
 		<slot />

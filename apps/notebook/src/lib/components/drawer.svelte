@@ -64,7 +64,7 @@
 			</div>
 		</div>
 		<div
-			class="absolute right-0 top-0 z-10 h-full shadow-md transition-[left] duration-200 {styles} {open
+			class="absolute right-0 top-0 h-full shadow-md transition-[left] duration-200 {styles} {open
 				? 'left-[256px]'
 				: 'left-0'}"
 		>
@@ -84,7 +84,7 @@
 		</div>
 		<button
 			type="button"
-			class="absolute left-0 top-0 h-full w-full bg-gray-700/50 transition-opacity duration-300 {open
+			class="absolute left-0 top-0 z-30 h-full w-full bg-gray-700/50 transition-opacity duration-200 {open
 				? 'pointer-events-auto opacity-100'
 				: 'pointer-events-none opacity-0'}"
 			on:click={() => (open = false)}
@@ -92,7 +92,7 @@
 		>
 		</button>
 		<div
-			class="absolute top-0 flex h-full w-[256px] shadow-md transition-[left] duration-300 {drawerStyles} {open
+			class="absolute top-0 z-40 flex h-full w-[256px] shadow-md transition-[left] duration-200 {drawerStyles} {open
 				? 'pointer-events-auto left-0'
 				: 'pointer-events-none -left-[256px]'}"
 		>

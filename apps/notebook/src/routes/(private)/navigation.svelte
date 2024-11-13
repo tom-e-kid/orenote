@@ -7,6 +7,8 @@
 	import Account from './account.svelte'
 	import DocOperations from './doc-operations.svelte'
 
+	export let open: boolean
+	export let md: boolean
 	let docs: Doc[] = []
 	let total = 0
 	let offset = 0
@@ -81,6 +83,12 @@
 		}
 	}
 
+	const handleTransition = () => {
+		if (!md) {
+			open = false
+		}
+	}
+
 	$: linkStyle = (href: string) => {
 		if ($page.url.pathname.startsWith(href)) return 'bg-gray-200 dark:bg-gray-800 selected'
 		return ''
@@ -99,17 +107,21 @@
 
 <nav class="flex h-full flex-col px-2">
 	<header class="h-[44px]"></header>
-	<section class="grow space-y-3 overflow-auto">
+	<section class="grow space-y-1 overflow-auto">
 		<h3 class="text-xs font-semibold">Docs</h3>
 		<ul class="space-y-1">
 			{#each docs as doc}
 				<li
-					class="flex h-[44px] items-center rounded px-2 hover:bg-gray-200 hover:dark:bg-gray-800 {linkStyle(
+					class="flex h-[32px] items-center rounded px-2 hover:bg-gray-200 hover:dark:bg-gray-800 {linkStyle(
 						`/docs/${doc.did}`
 					)}"
 				>
-					<a href={`/docs/${doc.did}`} class="flex h-full grow items-center truncate">
-						<span class="truncate">{doc.content.title || 'Untitled'}</span>
+					<a
+						href={`/docs/${doc.did}`}
+						class="flex h-full grow items-center truncate"
+						on:click={handleTransition}
+					>
+						<span class="truncate text-sm">{doc.content.title || 'Untitled'}</span>
 					</a>
 					<span class="selected:block hidden">
 						<DocOperations on:click={(e) => handleOperations(doc.did ?? '', e.detail.operation)} />
