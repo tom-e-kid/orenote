@@ -24,7 +24,7 @@
 </script>
 
 <div class="relative h-full w-full overflow-hidden">
-	<div class={`absolute left-0 top-0 z-20 h-[44px]`}>
+	<div class={`absolute left-0 top-0 z-50 h-[44px]`}>
 		<slot name="header" {md}>
 			<div class="flex h-full items-center space-x-3 p-3">
 				<button
