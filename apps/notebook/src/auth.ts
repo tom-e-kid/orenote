@@ -11,6 +11,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 	providers: [
 		Google,
 		Resend({
+			maxAge: 60 * 60, // 1 hour
 			from: env.RESEND_RECIPIENT,
 			sendVerificationRequest: async (params) => {
 				const { identifier: to, provider, url } = params
@@ -24,8 +25,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 					body: JSON.stringify({
 						from: provider.from,
 						to,
-						subject: `Sign in to ${host}`,
-						html: html({ url, host }),
+						subject: `Your Magic Link to Access ${host}`,
 						text: text({ url, host })
 					})
 				})
@@ -49,24 +49,17 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 	}
 })
 
-function html({ url, host }: { url: string; host: string }) {
-	const escapedHost = host.replace(/\./g, '&#8203;.')
-	return `
-<body>
-  <header>
-    <h1>Use this link to join orenote</h1>
-  </header>
-  <section>
-    <p>Sign in to <strong>${escapedHost}</strong></p>
-    <a href="${url}" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; color: #0f0; text-decoration: none; border-radius: 5px; padding: 10px 20px; border: 1px solid #0f0; display: inline-block; font-weight: bold;">Sign in</a>
-  </section>
-  <footer>
-    <p>If you did not request this email you can safely ignore it.</p>
-  </footer>
-</body>
-`
-}
-
 function text({ url, host }: { url: string; host: string }) {
-	return `Sign in to ${host}\n${url}\n\n`
+	return `
+Hello,
+
+To access ${host}, please click the link below. This link is unique to you and will expire in 60 minutes.
+
+${url}
+
+For your security, please do not share this email or link with anyone else. If you did not request this login link, please ignore this message.
+
+Thank you,  
+The orenote.millne team
+`
 }

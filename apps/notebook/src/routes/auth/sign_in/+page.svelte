@@ -2,6 +2,8 @@
 	import { signIn } from '@auth/sveltekit/client'
 
 	let email = ''
+	$: isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+
 	const handleMagicLink = async () => {
 		await signIn('resend', { email })
 	}
@@ -17,7 +19,8 @@
 				<input type="email" placeholder="user@example.com" class="input-box" bind:value={email} />
 				<button
 					type="button"
-					class="hover-scale-sm rounded-md bg-black py-2 text-white hover:bg-gradient-to-r hover:from-pink-500 hover:to-purple-500"
+					class="hover-scale-sm rounded-md bg-black py-2 text-white disabled:bg-black/50"
+					disabled={!isValid}
 					on:click={handleMagicLink}
 				>
 					Continue
@@ -53,7 +56,7 @@
 						></path>
 						<path fill="none" d="M0 0h48v48H0z"></path>
 					</svg>
-					<p class="text-sm">Googleで続ける</p>
+					<p class="text-sm">Continue with Google</p>
 				</button>
 			</div>
 		</section>

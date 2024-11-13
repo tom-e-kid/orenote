@@ -78,13 +78,13 @@
 	}
 
 	.hover-scale {
-		@apply transition duration-150 hover:z-10 hover:scale-125 hover:drop-shadow;
-		@apply disabled:hover:scale-100;
+		@apply transition duration-200 hover:z-10 hover:scale-125 hover:drop-shadow;
+		@apply disabled:hover:scale-200 disabled:hover:drop-shadow-none;
 	}
 
 	.hover-scale-sm {
-		@apply transition duration-150 hover:z-10 hover:scale-105 hover:drop-shadow;
-		@apply disabled:hover:scale-100;
+		@apply transition duration-200 hover:z-10 hover:scale-105 hover:drop-shadow;
+		@apply disabled:hover:scale-100 disabled:hover:drop-shadow-none;
 	}
 }
 
@@ -121,7 +121,7 @@
 		@apply secondary-text-color;
 		@apply hover:text-gray-900 dark:hover:text-white;
 		@apply active:text-tint-gradient;
-		@apply disabled:text-opacity-30;
+		@apply disabled:secondary-text-color disabled:text-opacity-30;
 	}
 
 	.button-style {
