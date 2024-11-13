@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { goto, invalidateAll } from '$app/navigation'
+	import { beforeNavigate, goto, invalidateAll } from '$app/navigation'
+	import { shortcut } from '$lib/actions/shortcut'
 	import type { Doc } from '$lib/models/doc'
 	import { docsStore } from '$lib/stores/docs'
 	import { Editor, type Content } from '@tiptap/core'
@@ -95,6 +96,22 @@
 		}
 	}
 
+	const handleShortcut = async () => {
+		if (dirty && !submitting) {
+			await onSave()
+		}
+	}
+
+	beforeNavigate(async ({ cancel }) => {
+		if (
+			!submitting &&
+			dirty &&
+			!confirm('Unsaved changes detected. Are you sure you want to leave this page?')
+		) {
+			cancel()
+		}
+	})
+
 	onMount(() => {
 		editor = new Editor({
 			element,
@@ -147,7 +164,7 @@
 	}
 </script>
 
-<main class="h-full w-full">
+<main class="h-full w-full" use:shortcut={{ key: 's', callback: handleShortcut }}>
 	<header class="flex h-[44px] w-full items-center justify-end px-3">
 		<span>
 			<button
