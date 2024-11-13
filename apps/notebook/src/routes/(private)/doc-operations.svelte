@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { t } from '$lib/i18n/translations'
 	import { createEventDispatcher, onMount } from 'svelte'
 
 	let dispatch = createEventDispatcher()
@@ -52,14 +53,14 @@
 	>
 		<ul class="divide-color flex flex-col divide-y">
 			<button type="button" class="p-3 text-left" on:click={() => handleClick('duplicate')}>
-				Duplicate
+				{$t('common.duplicate')}
 			</button>
 			<button
 				type="button"
 				class="p-3 text-left text-red-500"
 				on:click={() => handleClick('delete')}
 			>
-				Delete
+				{$t('common.delete')}
 			</button>
 		</ul>
 	</div>

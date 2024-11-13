@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { beforeNavigate, goto, invalidateAll } from '$app/navigation'
 	import { shortcut } from '$lib/actions/shortcut'
+	import { t } from '$lib/i18n/translations'
 	import type { Doc } from '$lib/models/doc'
 	import { docsStore } from '$lib/stores/docs'
 	import { Editor, type Content } from '@tiptap/core'
@@ -168,12 +169,12 @@
 	<header class="flex h-[44px] w-full items-center justify-end px-3">
 		<span>
 			<button
-				class="button-style rounded-full px-5 py-1"
+				class="button-style rounded-full px-5 py-1 text-xs"
 				type="button"
 				disabled={!dirty || submitting}
 				on:click={onSave}
 			>
-				Save
+				{$t('common.save')}
 			</button>
 		</span>
 	</header>

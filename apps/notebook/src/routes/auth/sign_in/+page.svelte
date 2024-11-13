@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { t } from '$lib/i18n/translations'
 	import { signIn } from '@auth/sveltekit/client'
 
 	let email = ''
@@ -23,7 +24,7 @@
 					disabled={!isValid}
 					on:click={handleMagicLink}
 				>
-					Continue
+					{$t('common.continue')}
 				</button>
 			</div>
 			<div class="flex items-center space-x-3">
@@ -56,7 +57,7 @@
 						></path>
 						<path fill="none" d="M0 0h48v48H0z"></path>
 					</svg>
-					<p class="text-sm">Continue with Google</p>
+					<p class="text-sm">{$t('common.continue_google')}</p>
 				</button>
 			</div>
 		</section>

@@ -1,0 +1,20 @@
+{
+	"ok": "OK",
+	"cancel": "Cancel",
+	"new": "New",
+	"save": "Save",
+	"copy": "Copy",
+	"duplicate": "Duplicate",
+	"delete": "Delete",
+	"share": "Share",
+	"unshare": "Unshare",
+	"title": "Title",
+	"untitled": "Untitled",
+	"loading": "Loading...",
+	"read_more": "Read more",
+	"all_items_loaded": "All items loaded.",
+	"docs": "Docs",
+	"continue": "Continue",
+	"continue_google": "Continue with Google",
+	"sign_out": "Sign out"
+}

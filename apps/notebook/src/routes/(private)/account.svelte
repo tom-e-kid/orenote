@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores'
+	import { t } from '$lib/i18n/translations'
 	import { createEventDispatcher, onMount } from 'svelte'
 
 	let dispatch = createEventDispatcher()
@@ -72,7 +73,7 @@
 				href="/auth/sign_out"
 				class="flex h-[44px] items-center space-x-2 rounded px-2 font-medium hover:bg-gray-200 hover:dark:bg-gray-800"
 			>
-				Sign out
+				{$t('common.sign_out')}
 			</a>
 		</ul>
 	</div>

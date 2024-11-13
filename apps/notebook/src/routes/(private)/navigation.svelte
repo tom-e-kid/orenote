@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
+	import { t } from '$lib/i18n/translations'
 	import type { Doc } from '$lib/models/doc'
 	import { docsStore } from '$lib/stores/docs'
 	import { onMount } from 'svelte'
@@ -108,7 +109,7 @@
 <nav class="flex h-full flex-col px-2">
 	<header class="h-[44px]"></header>
 	<section class="grow space-y-1 overflow-auto">
-		<h3 class="text-xs font-semibold">Docs</h3>
+		<h3 class="text-xs font-semibold">{$t('common.docs')}</h3>
 		<ul class="space-y-1">
 			{#each docs as doc}
 				<li
@@ -121,7 +122,7 @@
 						class="flex h-full grow items-center truncate"
 						on:click={handleTransition}
 					>
-						<span class="truncate text-sm">{doc.content.title || 'Untitled'}</span>
+						<span class="truncate text-sm">{doc.content.title || $t('common.untitled')}</span>
 					</a>
 					<span class="selected:block hidden">
 						<DocOperations on:click={(e) => handleOperations(doc.did ?? '', e.detail.operation)} />
@@ -132,11 +133,11 @@
 		<div class="flex items-center justify-center">
 			{#if docs.length < total}
 				<button type="button" on:click={loadMore} disabled={loading} class="button-style text-xs">
-					{#if loading}Loading...{/if}
-					{#if !loading}Read More{/if}
+					{#if loading}{$t('common.loading')}{/if}
+					{#if !loading}{$t('common.read_more')}{/if}
 				</button>
 			{:else}
-				<p class="secondary-text-color text-xs">All items loaded.</p>
+				<p class="secondary-text-color text-xs">{$t('common.all_items_loaded')}</p>
 			{/if}
 		</div>
 	</section>
