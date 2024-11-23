@@ -13,8 +13,10 @@
 	"loading": "Loading...",
 	"read_more": "Read more",
 	"all_items_loaded": "All items loaded.",
+	"calendar": "Calendar",
 	"docs": "Docs",
 	"continue": "Continue",
 	"continue_google": "Continue with Google",
-	"sign_out": "Sign out"
+	"sign_out": "Sign out",
+	"last_updated": "Last updated"
 }

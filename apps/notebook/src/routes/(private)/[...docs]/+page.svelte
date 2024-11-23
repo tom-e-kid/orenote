@@ -7,6 +7,7 @@
 	import { Editor, type Content } from '@tiptap/core'
 	import Placeholder from '@tiptap/extension-placeholder'
 	import StarterKit from '@tiptap/starter-kit'
+	import { format } from 'date-fns'
 	import { onDestroy, onMount } from 'svelte'
 	import type { PageData } from './$types'
 
@@ -16,6 +17,8 @@
 	let submitting = false
 	let original: Doc
 	let editing: Doc
+	let updatedAt: string
+	let createdAt: string
 
 	const handleSave = async (needsRedirect: boolean = false) => {
 		// ひとまず・・保存時にタイトルを取得して保存する
@@ -87,6 +90,12 @@
 	$: if (data?.props.doc && !isEqual(data.props.doc, original)) {
 		original = structuredClone(data.props.doc)
 		editing = structuredClone(original)
+		updatedAt = original.updatedAt
+			? format(new Date(original.updatedAt), 'yyyy.MM.dd HH:mm:ss')
+			: ''
+		createdAt = original.createdAt
+			? format(new Date(original.createdAt), 'yyyy.MM.dd HH:mm:ss')
+			: ''
 		if (editor) {
 			editor.commands.setContent(editing.content.raw as Content)
 		}
@@ -160,7 +169,10 @@
 			</button>
 		</span>
 	</header>
-	<section class="h-[calc(100%-88px)] w-full">
+	<section class="secondary-text-color flex h-[20px] items-center justify-end px-5 text-xs">
+		<p>{$t('common.last_updated')}: {updatedAt}</p>
+	</section>
+	<section class="h-[calc(100%-108px)] w-full">
 		<div class="h-full w-full" bind:this={element}></div>
 	</section>
 	<footer class="border-color flex h-[44px] w-full items-center border-t px-3">

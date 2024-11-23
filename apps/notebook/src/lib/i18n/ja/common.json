@@ -13,8 +13,10 @@
 	"loading": "ロード中...",
 	"read_more": "続きを読む",
 	"all_items_loaded": "全件取得済み",
+	"calendar": "カレンダー",
 	"docs": "書類",
 	"continue": "続ける",
 	"continue_google": "Googleで続ける",
-	"sign_out": "サインアウト"
+	"sign_out": "サインアウト",
+	"last_updated": "最終更新日時"
 }

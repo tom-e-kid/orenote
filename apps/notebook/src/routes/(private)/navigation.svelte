@@ -4,6 +4,7 @@
 	import { t } from '$lib/i18n/translations'
 	import type { Doc } from '$lib/models/doc'
 	import { clearDocs, docs, removeDoc, upsertDocs } from '$lib/stores/docs'
+	import { CalendarDays } from 'lucide-svelte'
 	import { onMount } from 'svelte'
 	import Account from './account.svelte'
 	import DocOperations from './doc-operations.svelte'
@@ -86,8 +87,22 @@
 	})
 </script>
 
-<nav class="flex h-full flex-col px-2">
+<nav class="flex h-full flex-col space-y-3 px-2">
 	<header class="h-[44px]"></header>
+	<section>
+		<ul class="space-y-1">
+			<li class="flex h-[32px] items-center rounded px-2 hover:bg-gray-200 hover:dark:bg-gray-800">
+				<a
+					href="/calendar"
+					class="flex h-full grow items-center truncate"
+					on:click={handleTransition}
+				>
+					<CalendarDays class="mr-2 size-4" />
+					<span class="truncate">{$t('common.calendar')}</span>
+				</a>
+			</li>
+		</ul>
+	</section>
 	<section class="grow space-y-1 overflow-auto">
 		<h3 class="text-xs font-semibold">{$t('common.docs')}</h3>
 		<ul class="space-y-1">
@@ -121,7 +136,7 @@
 			{/if}
 		</div>
 	</section>
-	<footer class="h-[44px]">
+	<footer class="py-3">
 		<Account />
 	</footer>
 </nav>
