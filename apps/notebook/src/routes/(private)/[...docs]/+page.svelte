@@ -51,6 +51,7 @@
 
 	const onSave = async () => {
 		submitting = true
+		const selection = editor.state.selection
 		editor.setEditable(false)
 		try {
 			await handleSave(true)
@@ -58,6 +59,7 @@
 			console.error(e)
 		} finally {
 			editor.setEditable(true)
+			editor.chain().setTextSelection(selection).focus().run()
 			submitting = false
 		}
 	}
@@ -105,7 +107,7 @@
 			content: editing.content.raw as Content,
 			editorProps: {
 				attributes: {
-					class: 'focus-within:outline-none h-full overflow-auto p-3'
+					class: 'focus-within:outline-none h-full overflow-auto px-5'
 				}
 			},
 			onTransaction: () => {
