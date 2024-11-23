@@ -15,13 +15,14 @@ export async function GET({ url, locals }) {
 		const [docs, total] = await Promise.all([
 			prisma.doc.findMany({
 				where: {
-					uid
+					uid,
+					draft: false
 				},
 				skip: offset,
 				take: limit,
 				orderBy: { updatedAt: 'desc' }
 			}),
-			prisma.doc.count({ where: { uid } })
+			prisma.doc.count({ where: { uid, draft: false } })
 		])
 		return json({ docs, total })
 	} catch (e) {

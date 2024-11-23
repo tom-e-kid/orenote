@@ -11,8 +11,6 @@ export const load = async ({ url, data }) => {
 		? browserLanguage
 		: defaultLanguage
 
-	console.log('initLocale', initLocale)
-
 	await loadTranslations(initLocale, pathname) // keep this just before the `return`
 
 	return {

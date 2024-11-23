@@ -3,18 +3,23 @@
 	import { page } from '$app/stores'
 	import { t } from '$lib/i18n/translations'
 	import type { Doc } from '$lib/models/doc'
-	import { docsStore } from '$lib/stores/docs'
+	import { clearDocs, docs, removeDoc, upsertDocs } from '$lib/stores/docs'
 	import { onMount } from 'svelte'
 	import Account from './account.svelte'
 	import DocOperations from './doc-operations.svelte'
 
 	export let open: boolean
 	export let md: boolean
-	let docs: Doc[] = []
 	let total = 0
 	let offset = 0
 	const limit = 20
 	let loading = false
+
+	const reset = () => {
+		offset = 0
+		total = 0
+		clearDocs()
+	}
 
 	const loadMore = async () => {
 		if (loading) return
@@ -22,21 +27,10 @@
 		try {
 			const res = await fetch(`/api/docs?limit=${limit}&offset=${offset}`)
 			if (!res.ok) throw new Error('Failed to fetch data')
-
 			const data = await res.json()
 			total = data.total
 			offset += limit
-			docsStore.update((docs) => {
-				for (const doc of data.docs.reverse()) {
-					const index = docs.findIndex((d) => d.did === doc.did)
-					if (index !== -1) {
-						docs[index] = doc
-					} else {
-						docs.unshift(doc)
-					}
-				}
-				return docs
-			})
+			upsertDocs(data.docs)
 		} catch (e) {
 			console.error(e)
 		} finally {
@@ -44,8 +38,7 @@
 		}
 	}
 
-	const handleDuplicate = async (did: string) => {
-		const doc = docs.find((d) => d.did === did)
+	const handleDuplicate = async (doc: Doc) => {
 		if (!doc) return
 		const res = await fetch(`/api/docs`, {
 			method: 'POST',
@@ -56,31 +49,23 @@
 		})
 		if (!res.ok) return
 		const data = await res.json()
-		docsStore.update((docs) => {
-			docs.unshift(data.doc)
-			return docs
-		})
+		upsertDocs([data.idea])
 	}
 
 	const handleDelete = async (did: string) => {
 		const res = await fetch(`/api/docs/${did}`, { method: 'DELETE' })
 		if (!res.ok) return
-		docsStore.update((docs) => {
-			const index = docs.findIndex((d) => d.did === did)
-			if (index !== -1) {
-				docs.splice(index, 1)
-			}
-			return docs
-		})
+		removeDoc(did)
+		total -= 1
 		await goto('/')
 	}
 
-	const handleOperations = async (iid: string, operation: string) => {
-		if (!iid) return
+	const handleOperations = async (doc: Doc, operation: string) => {
+		if (!doc || !doc.did) return
 		if (operation === 'duplicate') {
-			await handleDuplicate(iid)
+			await handleDuplicate(doc)
 		} else if (operation === 'delete') {
-			await handleDelete(iid)
+			await handleDelete(doc.did)
 		}
 	}
 
@@ -95,14 +80,9 @@
 		return ''
 	}
 
-	docsStore.subscribe((value) => {
-		docs = value
-	})
-
 	onMount(async () => {
-		if (docs.length === 0) {
-			await loadMore()
-		}
+		reset()
+		loadMore()
 	})
 </script>
 
@@ -111,7 +91,7 @@
 	<section class="grow space-y-1 overflow-auto">
 		<h3 class="text-xs font-semibold">{$t('common.docs')}</h3>
 		<ul class="space-y-1">
-			{#each docs as doc}
+			{#each $docs as doc}
 				<li
 					class="flex h-[32px] items-center rounded px-2 hover:bg-gray-200 hover:dark:bg-gray-800 {linkStyle(
 						`/docs/${doc.did}`
@@ -125,13 +105,13 @@
 						<span class="truncate text-sm">{doc.content.title || $t('common.untitled')}</span>
 					</a>
 					<span class="selected:block hidden">
-						<DocOperations on:click={(e) => handleOperations(doc.did ?? '', e.detail.operation)} />
+						<DocOperations on:click={(e) => handleOperations(doc, e.detail.operation)} />
 					</span>
 				</li>
 			{/each}
 		</ul>
 		<div class="flex items-center justify-center">
-			{#if docs.length < total}
+			{#if $docs.length < total}
 				<button type="button" on:click={loadMore} disabled={loading} class="button-style text-xs">
 					{#if loading}{$t('common.loading')}{/if}
 					{#if !loading}{$t('common.read_more')}{/if}

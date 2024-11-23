@@ -31,21 +31,32 @@ export async function GET({ params: { did }, locals }) {
 	}
 }
 
-export async function PUT({ request, params: { did }, locals }) {
+export async function PUT({ params: { did }, request, locals }) {
 	try {
 		const session = await locals.auth()
 		const uid = session?.user?.id
 		if (!uid) {
 			error(401, 'Unauthorized')
 		}
-		const content = await request.json()
+		const data = await request.json()
 		const doc = await prisma.doc.update({
-			where: { did },
+			where: {
+				did,
+				uid
+			},
 			data: {
-				content
+				draft: false,
+				content: data.content
 			}
 		})
-		return json({ doc })
+		const publicUrl = doc.publicKey ? `${env.NOTEBOOK_URL}/notebook/${doc.publicKey}` : undefined
+		return json({
+			doc: {
+				...doc,
+				publicUrl
+			},
+			redirectTo: data.draft ? `/docs/${doc.did}` : undefined
+		})
 	} catch (e) {
 		console.error(e)
 		error(500, 'Internal Server Error')

@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { beforeNavigate, goto, invalidateAll } from '$app/navigation'
-	import { shortcut } from '$lib/actions/shortcut'
+	import { shortcuts } from '$lib/actions/shortcuts'
 	import { t } from '$lib/i18n/translations'
 	import type { Doc } from '$lib/models/doc'
-	import { docsStore } from '$lib/stores/docs'
+	import { upsertDocs } from '$lib/stores/docs'
 	import { Editor, type Content } from '@tiptap/core'
 	import Placeholder from '@tiptap/extension-placeholder'
 	import StarterKit from '@tiptap/starter-kit'
@@ -11,84 +11,49 @@
 	import type { PageData } from './$types'
 
 	export let data: PageData
-
 	let editor: Editor
 	let element: HTMLDivElement
 	let submitting = false
 	let original: Doc
 	let editing: Doc
 
-	$: if (data?.doc && !isEqual(data.doc as Doc, original)) {
-		original = structuredClone(data.doc)
-		editing = structuredClone(data.doc)
+	const handleSave = async (needsRedirect: boolean = false) => {
+		// ひとまず・・保存時にタイトルを取得して保存する
+		let title = ''
 		if (editor) {
-			editor.commands.setContent(editing.content.raw as Content)
+			const text = editor.state.doc.firstChild?.textContent
+			title = text ?? ''
 		}
-	}
-	$: dirty = !isEqual(editing, original)
 
-	const isEqual = <T,>(a: T, b: T) => JSON.stringify(a) === JSON.stringify(b)
-
-	const updateStore = (doc: Doc) => {
-		docsStore.update((docs) => {
-			const index = docs.findIndex((d) => d.did === doc.did)
-			if (index !== -1) {
-				docs[index] = doc
-			} else {
-				docs.unshift(doc)
-			}
-			return docs
-		})
-	}
-
-	const create = async () => {
-		const res = await fetch(`/api/docs`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(editing.content)
-		})
-		if (res.ok) {
-			const { doc } = await res.json()
-			updateStore(doc)
-			await goto(`/docs/${doc.did}`)
-			// location.reload()
-		}
-	}
-
-	const update = async () => {
 		const res = await fetch(`/api/docs/${editing.did}`, {
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify(editing.content)
+			body: JSON.stringify({
+				content: {
+					...editing.content,
+					title
+				},
+				draft: editing.draft
+			})
 		})
-		if (res.ok) {
-			const { doc } = await res.json()
-			updateStore(doc)
-			await invalidateAll()
+		if (!res.ok) throw new Error('Failed to save data')
+		const { doc, redirectTo } = await res.json()
+		if (doc) {
+			upsertDocs([doc])
 		}
+		if (needsRedirect && redirectTo) {
+			await goto(redirectTo)
+		}
+		await invalidateAll()
 	}
 
 	const onSave = async () => {
 		submitting = true
 		editor.setEditable(false)
 		try {
-			// ひとまず・・保存時にタイトルを取得して保存する
-			let title = ''
-			if (editor) {
-				const text = editor.state.doc.firstChild?.textContent
-				title = text ?? ''
-			}
-			editing.content.title = title
-
-			if (editing.did) {
-				await update()
-			} else {
-				await create()
-			}
+			await handleSave(true)
 		} catch (e) {
 			console.error(e)
 		} finally {
@@ -97,21 +62,36 @@
 		}
 	}
 
-	const handleShortcut = async () => {
-		if (dirty && !submitting) {
-			await onSave()
+	const handleShortcuts = (key: string) => {
+		if (key === 's') {
+			if (dirty && !submitting) {
+				onSave()
+			}
 		}
 	}
 
 	beforeNavigate(async ({ cancel }) => {
-		if (
-			!submitting &&
-			dirty &&
-			!confirm('Unsaved changes detected. Are you sure you want to leave this page?')
-		) {
-			cancel()
+		if (dirty && !submitting) {
+			if (!editing.draft) {
+				if (!confirm('Unsaved changes detected. Are you sure you want to leave this page?')) {
+					cancel()
+				}
+			} else {
+				handleSave()
+			}
 		}
 	})
+
+	$: if (data?.props.doc && !isEqual(data.props.doc, original)) {
+		original = structuredClone(data.props.doc)
+		editing = structuredClone(original)
+		if (editor) {
+			editor.commands.setContent(editing.content.raw as Content)
+		}
+	}
+	$: dirty = !isEqual(editing, original)
+
+	const isEqual = <T,>(a: T, b: T) => JSON.stringify(a) === JSON.stringify(b)
 
 	onMount(() => {
 		editor = new Editor({
@@ -165,7 +145,7 @@
 	}
 </script>
 
-<main class="h-full w-full" use:shortcut={{ key: 's', callback: handleShortcut }}>
+<main class="h-full w-full" use:shortcuts={{ keys: ['s'], callback: handleShortcuts }}>
 	<header class="flex h-[44px] w-full items-center justify-end px-3">
 		<span>
 			<button
