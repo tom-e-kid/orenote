@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { page } from '$app/stores'
+	import Notification from '$lib/components/notification.svelte'
 	import { t } from '$lib/i18n/translations'
 	import { signIn } from '@auth/sveltekit/client'
 
@@ -8,9 +10,12 @@
 	const handleMagicLink = async () => {
 		await signIn('resend', { email })
 	}
+
+	$: errorKey = $page.url.searchParams.get('error')
 </script>
 
 <main class="flex h-[100svh] w-full flex-col items-center justify-center">
+	<Notification note={errorKey ? { key: errorKey, type: 'error' } : null} />
 	<div class="w-full max-w-[320px] space-y-3 p-3">
 		<header>
 			<h5 class="text-2xl font-black">ORENOTE</h5>
