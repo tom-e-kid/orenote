@@ -5,18 +5,20 @@
 		autoUpdate,
 		computePosition,
 		offset,
-		shift,
-		type Placement
+		shift
 	} from '@floating-ui/dom'
 	import { onMount } from 'svelte'
 
-	let className = 'secondary-background-color w-[max-content] px-3 py-1 shadow-xl rounded-xl'
-	export { className as class }
-	export let buttonClass = ''
-	export let placement: Placement | undefined = undefined
-	export let dismissOnOutsideClick = true
+	let {
+		class: className = 'secondary-background-color w-[max-content] px-3 py-1 shadow-xl rounded-xl',
+		buttonClass = '',
+		placement,
+		dismissOnOutsideClick = true,
+		pop = $bindable(false),
+		popover,
+		children
+	} = $props()
 
-	export let pop = false
 	let reference: HTMLButtonElement
 	let floating: HTMLDivElement
 	let arrowEl: HTMLDivElement
@@ -61,6 +63,16 @@
 		pop = !pop
 	}
 
+	$effect(() => {
+		if (pop) {
+			update()
+		} else {
+			if (cleanup) {
+				cleanup()
+			}
+		}
+	})
+
 	onMount(() => {
 		function handleOutsideClick(event: MouseEvent) {
 			if (
@@ -82,21 +94,13 @@
 			}
 		}
 	})
-
-	$: if (pop) {
-		update()
-	} else {
-		if (cleanup) {
-			cleanup()
-		}
-	}
 </script>
 
-<button bind:this={reference} type="button" class={buttonClass} on:click={toggle}>
-	<slot name="button-content" />
+<button bind:this={reference} type="button" class={buttonClass} onclick={toggle}>
+	{@render children()}
 </button>
 
 <div bind:this={floating} class="absolute z-50 {className} {pop ? 'block' : 'hidden'}">
 	<div bind:this={arrowEl} class="absolute h-[12px] w-[12px] rotate-45 bg-inherit"></div>
-	<slot name="popover-content" />
+	{@render popover()}
 </div>

@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
 
+	let { children } = $props()
+
 	onMount(() => {
 		const mq = window.matchMedia('(prefers-color-scheme: dark)')
 		function update() {
@@ -18,4 +20,4 @@
 	})
 </script>
 
-<slot />
+{@render children?.()}

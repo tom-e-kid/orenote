@@ -1,12 +1,28 @@
 <script lang="ts">
-	import { onMount } from 'svelte'
+	import { PanelLeft } from 'lucide-svelte'
+	import { onMount, type Snippet } from 'svelte'
 
-	export let title = ''
-	export let styles = 'background-color'
-	export let drawerStyles = 'secondary-background-color'
-	export let open = true
+	interface Props {
+		title?: string
+		styles?: string
+		drawerStyles?: string
+		open?: boolean
+		header?: Snippet<[{ md: boolean }]>
+		drawer: Snippet<[{ md: boolean }]>
+		children: Snippet<[{ md: boolean }]>
+	}
 
-	let md = true
+	let {
+		title = '',
+		styles = 'background-color',
+		drawerStyles = 'secondary-background-color',
+		open = $bindable(true),
+		header,
+		drawer,
+		children
+	}: Props = $props()
+
+	let md = $state(true)
 	onMount(() => {
 		const mq = window.matchMedia('(min-width: 768px)')
 		function update() {
@@ -25,31 +41,21 @@
 
 <div class="relative h-full w-full overflow-hidden">
 	<div class={`absolute left-0 top-0 z-50 h-[44px]`}>
-		<slot name="header" {md}>
+		{#if header}
+			{@render header?.({ md })}
+		{:else}
 			<div class="flex h-full items-center space-x-3 p-3">
 				<button
 					type="button"
-					on:click={() => (open = !open)}
+					onclick={() => (open = !open)}
 					class="hover-scale-sm"
 					aria-label="Toggle Drawer"
 				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						class="secondary-text-color size-5"
-					>
-						<rect x="2" y="2" width="20" height="18" rx="4" ry="4" />
-						<line x1="10" y1="2" x2="10" y2="20" />
-					</svg>
+					<PanelLeft class="size-5" />
 				</button>
-				<span class="secondary-text-color pb-1 text-xl font-extralight drop-shadow">{title}</span>
+				<span class="text-xl drop-shadow">{title}</span>
 			</div>
-		</slot>
+		{/if}
 	</div>
 	{#if md}
 		<div
@@ -58,9 +64,7 @@
 				: 'pointer-events-none'}"
 		>
 			<div class="h-[100svh] w-full">
-				<slot name="drawer" {md}>
-					<p class="p-3">Drawer</p>
-				</slot>
+				{@render drawer({ md })}
 			</div>
 		</div>
 		<div
@@ -69,17 +73,13 @@
 				: 'left-0'}"
 		>
 			<div class="h-[100svh] w-full">
-				<slot {md}>
-					<p class="p-3">Content</p>
-				</slot>
+				{@render children({ md })}
 			</div>
 		</div>
 	{:else}
 		<div class="h-[100svh] w-full {styles}">
 			<div class="h-full w-full">
-				<slot {md}>
-					<p class="p-3">Content</p>
-				</slot>
+				{@render children({ md })}
 			</div>
 		</div>
 		<button
@@ -87,7 +87,7 @@
 			class="absolute left-0 top-0 z-30 h-full w-full bg-gray-700/50 transition-opacity duration-200 {open
 				? 'pointer-events-auto opacity-100'
 				: 'pointer-events-none opacity-0'}"
-			on:click={() => (open = false)}
+			onclick={() => (open = false)}
 			aria-label="Background Dim"
 		>
 		</button>
@@ -97,9 +97,7 @@
 				: 'pointer-events-none -left-[256px]'}"
 		>
 			<div class="h-[100svh] w-full">
-				<slot name="drawer" {md}>
-					<p class="p-3">Drawer</p>
-				</slot>
+				{@render drawer({ md })}
 			</div>
 		</div>
 	{/if}

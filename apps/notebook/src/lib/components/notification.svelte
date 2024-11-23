@@ -1,10 +1,12 @@
 <script lang="ts">
-	export let note: { key: string; type: 'error' } | null = null
+	let { key } = $props()
+
 	const messages: Record<string, string> = {
 		OAuthAccountNotLinked: 'Your account is not linked with any OAuth provider.',
 		UnknownError: 'Unknown error occurred.'
 	}
-	$: message = note ? messages[note.key] || messages.UnknownError : messages.UnknownError
+
+	let message = $derived(key ? messages[key] || messages.UnknownError : null)
 </script>
 
 {#if message}

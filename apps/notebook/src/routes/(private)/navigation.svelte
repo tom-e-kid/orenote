@@ -9,12 +9,12 @@
 	import Account from './account.svelte'
 	import DocOperations from './doc-operations.svelte'
 
-	export let open: boolean
-	export let md: boolean
-	let total = 0
-	let offset = 0
+	let { open = $bindable(), md } = $props()
+
 	const limit = 20
-	let loading = false
+	let total = $state(0)
+	let offset = $state(0)
+	let loading = $state(false)
 
 	const reset = () => {
 		offset = 0
@@ -76,10 +76,10 @@
 		}
 	}
 
-	$: linkStyle = (href: string) => {
+	const linkStyle = $derived((href: string) => {
 		if ($page.url.pathname.startsWith(href)) return 'bg-gray-200 dark:bg-gray-800 selected'
 		return ''
-	}
+	})
 
 	onMount(async () => {
 		reset()
@@ -95,7 +95,7 @@
 				<a
 					href="/calendar"
 					class="flex h-full grow items-center truncate"
-					on:click={handleTransition}
+					onclick={handleTransition}
 				>
 					<CalendarDays class="mr-2 size-4" />
 					<span class="truncate">{$t('common.calendar')}</span>
@@ -115,19 +115,19 @@
 					<a
 						href={`/docs/${doc.did}`}
 						class="flex h-full grow items-center truncate"
-						on:click={handleTransition}
+						onclick={handleTransition}
 					>
 						<span class="truncate text-sm">{doc.content.title || $t('common.untitled')}</span>
 					</a>
 					<span class="selected:block hidden">
-						<DocOperations on:click={(e) => handleOperations(doc, e.detail.operation)} />
+						<DocOperations onclick={(e) => handleOperations(doc, e.operation)} />
 					</span>
 				</li>
 			{/each}
 		</ul>
 		<div class="flex items-center justify-center">
 			{#if $docs.length < total}
-				<button type="button" on:click={loadMore} disabled={loading} class="button-style text-xs">
+				<button type="button" onclick={loadMore} disabled={loading} class="button-style text-xs">
 					{#if loading}{$t('common.loading')}{/if}
 					{#if !loading}{$t('common.read_more')}{/if}
 				</button>

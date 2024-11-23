@@ -1,10 +1,12 @@
 <script lang="ts">
 	import Theme from '$lib/components/theme.svelte'
 	import '../app.css'
+
+	let { children } = $props()
 </script>
 
 <Theme>
 	<div class="text-color background-color h-full w-full">
-		<slot />
+		{@render children?.()}
 	</div>
 </Theme>

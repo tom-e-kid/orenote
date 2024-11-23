@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { format } from 'date-fns'
+
 	import { beforeNavigate, goto, invalidateAll } from '$app/navigation'
 	import { shortcuts } from '$lib/actions/shortcuts'
 	import { t } from '$lib/i18n/translations'
@@ -7,18 +9,41 @@
 	import { Editor, type Content } from '@tiptap/core'
 	import Placeholder from '@tiptap/extension-placeholder'
 	import StarterKit from '@tiptap/starter-kit'
-	import { format } from 'date-fns'
 	import { onDestroy, onMount } from 'svelte'
 	import type { PageData } from './$types'
 
-	export let data: PageData
+	interface Props {
+		data: PageData
+	}
+
+	let { data }: Props = $props()
+
 	let editor: Editor
 	let element: HTMLDivElement
-	let submitting = false
+	let submitting = $state(false)
 	let original: Doc
-	let editing: Doc
-	let updatedAt: string
-	let createdAt: string
+	let editing = $state({} as Doc)
+	let updatedAt = $state('')
+	let dirty = $state(false)
+
+	const isEqual = <T,>(a: T, b: T) => JSON.stringify(a) === JSON.stringify(b)
+
+	$effect(() => {
+		if (data?.props.doc && !isEqual(data.props.doc, original)) {
+			original = structuredClone(data.props.doc)
+			editing = structuredClone(original)
+			updatedAt = original.updatedAt
+				? format(new Date(original.updatedAt), 'yyyy.MM.dd HH:mm:ss')
+				: ''
+			if (editor) {
+				editor.commands.setContent(editing.content.raw as Content)
+			}
+		}
+	})
+
+	$effect(() => {
+		dirty = !isEqual(original, editing)
+	})
 
 	const handleSave = async (needsRedirect: boolean = false) => {
 		// ひとまず・・保存時にタイトルを取得して保存する
@@ -87,23 +112,6 @@
 		}
 	})
 
-	$: if (data?.props.doc && !isEqual(data.props.doc, original)) {
-		original = structuredClone(data.props.doc)
-		editing = structuredClone(original)
-		updatedAt = original.updatedAt
-			? format(new Date(original.updatedAt), 'yyyy.MM.dd HH:mm:ss')
-			: ''
-		createdAt = original.createdAt
-			? format(new Date(original.createdAt), 'yyyy.MM.dd HH:mm:ss')
-			: ''
-		if (editor) {
-			editor.commands.setContent(editing.content.raw as Content)
-		}
-	}
-	$: dirty = !isEqual(editing, original)
-
-	const isEqual = <T,>(a: T, b: T) => JSON.stringify(a) === JSON.stringify(b)
-
 	onMount(() => {
 		editor = new Editor({
 			element,
@@ -163,7 +171,7 @@
 				class="button-style rounded-full px-5 py-1 text-xs"
 				type="button"
 				disabled={!dirty || submitting}
-				on:click={onSave}
+				onclick={onSave}
 			>
 				{$t('common.save')}
 			</button>

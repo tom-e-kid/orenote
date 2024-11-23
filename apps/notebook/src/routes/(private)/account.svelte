@@ -2,19 +2,14 @@
 	import { page } from '$app/stores'
 	import { t } from '$lib/i18n/translations'
 	import { CircleUserRound } from 'lucide-svelte'
-	import { createEventDispatcher, onMount } from 'svelte'
+	import { onMount } from 'svelte'
 
-	let dispatch = createEventDispatcher()
-	let open = false
+	let session = $page.data.session!
+	let open = $state(false)
 	let menu: HTMLDivElement
 
 	const toggle = () => {
 		open = !open
-	}
-
-	const handleClick = (operation: string) => {
-		dispatch('click', { detail: operation })
-		open = false
 	}
 
 	onMount(() => {
@@ -28,15 +23,13 @@
 			document.removeEventListener('click', handleOutsideClick)
 		}
 	})
-
-	$: session = $page.data.session!
 </script>
 
 <div class="relative {open ? 'z-10' : 'z-0'}" bind:this={menu}>
 	<button
 		type="button"
 		class="z-0 flex h-[44px] w-full items-center space-x-2 rounded px-2 font-medium hover:bg-gray-200 hover:dark:bg-gray-800"
-		on:click={toggle}
+		onclick={toggle}
 		aria-label="Accout Menu"
 	>
 		<span>

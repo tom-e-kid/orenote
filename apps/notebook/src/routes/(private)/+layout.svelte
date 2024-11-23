@@ -3,17 +3,16 @@
 	import Navigation from './navigation.svelte'
 	import Title from './title.svelte'
 
-	let open = true
+	let { children } = $props()
+	let open = $state(true)
 </script>
 
 <Drawer bind:open>
-	<svelte:fragment slot="header">
+	{#snippet header()}
 		<Title bind:open />
-	</svelte:fragment>
-	<svelte:fragment slot="drawer" let:md>
+	{/snippet}
+	{#snippet drawer({ md })}
 		<Navigation {md} bind:open />
-	</svelte:fragment>
-	<svelte:fragment>
-		<slot />
-	</svelte:fragment>
+	{/snippet}
+	{@render children?.()}
 </Drawer>

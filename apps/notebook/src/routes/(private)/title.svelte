@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { FilePenLine, PanelLeft } from 'lucide-svelte'
 
-	export let open = true
+	let { open = $bindable(true) } = $props()
 </script>
 
 <div class="relative h-full w-[256px]">
 	<span class="absolute left-3 top-1/2 flex -translate-y-1/2 space-x-3">
 		<button
 			type="button"
-			on:click={() => (open = !open)}
+			onclick={() => (open = !open)}
 			class="hover-scale-sm"
 			aria-label="Toggle Drawer"
 		>

@@ -4,18 +4,17 @@
 	import { t } from '$lib/i18n/translations'
 	import { signIn } from '@auth/sveltekit/client'
 
-	let email = ''
-	$: isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+	let email = $state('')
+	let isValid = $derived(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+	let errorKey = $page.url.searchParams.get('error')
 
 	const handleMagicLink = async () => {
 		await signIn('resend', { email })
 	}
-
-	$: errorKey = $page.url.searchParams.get('error')
 </script>
 
 <main class="flex h-[100svh] w-full flex-col items-center justify-center">
-	<Notification note={errorKey ? { key: errorKey, type: 'error' } : null} />
+	<Notification key={errorKey} />
 	<div class="w-full max-w-[320px] space-y-3 p-3">
 		<header>
 			<h5 class="text-2xl font-black">ORENOTE</h5>
@@ -27,7 +26,7 @@
 					type="button"
 					class="hover-scale-sm rounded-md bg-black py-2 text-white disabled:bg-black/50"
 					disabled={!isValid}
-					on:click={handleMagicLink}
+					onclick={handleMagicLink}
 				>
 					{$t('common.continue')}
 				</button>
@@ -41,7 +40,7 @@
 				<button
 					type="button"
 					class="hover-scale-sm flex w-full items-center justify-center space-x-2 rounded-full border border-gray-300 px-3 py-2 dark:border-black dark:bg-black"
-					on:click={() => signIn('google')}
+					onclick={() => signIn('google')}
 				>
 					<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="h-5 w-5">
 						<path
