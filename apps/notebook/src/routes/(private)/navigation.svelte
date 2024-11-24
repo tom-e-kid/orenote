@@ -50,7 +50,7 @@
 		})
 		if (!res.ok) return
 		const data = await res.json()
-		upsertDocs([data.idea])
+		upsertDocs([data.doc])
 	}
 
 	const handleDelete = async (did: string) => {
