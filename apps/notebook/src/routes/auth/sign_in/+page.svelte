@@ -5,8 +5,8 @@
 	import { signIn } from '@auth/sveltekit/client'
 
 	let email = $state('')
-	let isValid = $derived(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
-	let errorKey = $derived($page.url.searchParams.get('error'))
+	const isValid = $derived(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+	const errorKey = $derived($page.url.searchParams.get('error'))
 
 	const handleMagicLink = async () => {
 		await signIn('resend', { email })
