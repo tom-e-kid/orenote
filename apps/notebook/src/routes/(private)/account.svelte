@@ -37,7 +37,7 @@
 				<img src={session.user.image} class="size-5 rounded-full" alt="User Avatar" />
 			{:else}
 				<div>
-					<CircleUserRound class="size-5" />
+					<CircleUserRound class="size-5" strokeWidth={1.5} />
 				</div>
 			{/if}
 		</span>

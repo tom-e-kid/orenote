@@ -1,20 +1,25 @@
 <script lang="ts">
 	import { page } from '$app/stores'
-	import Notification from '$lib/components/notification.svelte'
 	import { t } from '$lib/i18n/translations'
+	import { pushError } from '$lib/stores/toasts'
 	import { signIn } from '@auth/sveltekit/client'
 
 	let email = $state('')
 	let isValid = $derived(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
-	let errorKey = $page.url.searchParams.get('error')
+	let errorKey = $derived($page.url.searchParams.get('error'))
 
 	const handleMagicLink = async () => {
 		await signIn('resend', { email })
 	}
+
+	$effect(() => {
+		if (errorKey) {
+			pushError($t(`errors.${errorKey}`))
+		}
+	})
 </script>
 
 <main class="flex h-[100svh] w-full flex-col items-center justify-center">
-	<Notification key={errorKey} />
 	<div class="w-full max-w-[320px] space-y-3 p-3">
 		<header>
 			<h5 class="text-2xl font-black">ORENOTE</h5>

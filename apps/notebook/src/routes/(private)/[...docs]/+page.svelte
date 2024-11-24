@@ -19,7 +19,7 @@
 	let { data }: Props = $props()
 
 	let editor: Editor
-	let element: HTMLDivElement
+	let element: HTMLDivElement | undefined = $state(undefined)
 	let submitting = $state(false)
 	let original: Doc
 	let editing = $state({} as Doc)
@@ -164,26 +164,32 @@
 	}
 </script>
 
-<main class="h-full w-full" use:shortcuts={{ keys: ['s'], callback: handleShortcuts }}>
-	<header class="flex h-[44px] w-full items-center justify-end px-3">
-		<span>
-			<button
-				class="button-style rounded-full px-5 py-1 text-xs"
-				type="button"
-				disabled={!dirty || submitting}
-				onclick={onSave}
-			>
-				{$t('common.save')}
-			</button>
-		</span>
-	</header>
-	<section class="secondary-text-color flex h-[20px] items-center justify-end px-5 text-xs">
-		<p>{$t('common.last_updated')}: {updatedAt}</p>
-	</section>
-	<section class="h-[calc(100%-108px)] w-full">
-		<div class="h-full w-full" bind:this={element}></div>
-	</section>
-	<footer class="border-color flex h-[44px] w-full items-center border-t px-3">
-		<p class="secondary-text-color text-xs">Under Construction...</p>
-	</footer>
-</main>
+{#if editing}
+	<main class="h-full w-full" use:shortcuts={{ keys: ['s'], callback: handleShortcuts }}>
+		<header class="flex h-[44px] w-full items-center justify-end px-3">
+			<span>
+				<button
+					class="button-style rounded-full px-5 py-1 text-xs"
+					type="button"
+					disabled={!dirty || submitting}
+					onclick={onSave}
+				>
+					{$t('common.save')}
+				</button>
+			</span>
+		</header>
+		{#if !editing.draft}
+			<section class="secondary-text-color flex h-[20px] items-center justify-end px-5 text-xs">
+				{#if updatedAt}
+					<p>{$t('common.last_updated')}: {updatedAt}</p>
+				{/if}
+			</section>
+		{/if}
+		<section class="w-full {editing.draft ? 'h-[calc(100%-88px)]' : 'h-[calc(100%-108px)]'}">
+			<div class="h-full w-full" bind:this={element}></div>
+		</section>
+		<footer class="border-color flex h-[44px] w-full items-center border-t px-3">
+			<p class="secondary-text-color text-xs">Under Construction...</p>
+		</footer>
+	</main>
+{/if}

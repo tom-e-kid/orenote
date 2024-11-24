@@ -1,4 +1,4 @@
-import type { Doc } from '$lib/models/doc.js'
+import type { Doc } from '$lib/models/doc'
 import { error } from '@sveltejs/kit'
 
 export async function load({ params, fetch, data }) {

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { PanelLeft } from 'lucide-svelte'
+	import { PanelLeftClose, PanelLeftOpen } from 'lucide-svelte'
 	import { onMount, type Snippet } from 'svelte'
 
 	interface Props {
@@ -9,7 +9,7 @@
 		open?: boolean
 		header?: Snippet<[{ md: boolean }]>
 		drawer: Snippet<[{ md: boolean }]>
-		children: Snippet<[{ md: boolean }]>
+		children?: Snippet
 	}
 
 	let {
@@ -40,9 +40,9 @@
 </script>
 
 <div class="relative h-full w-full overflow-hidden">
-	<div class={`absolute left-0 top-0 z-50 h-[44px]`}>
+	<div class={`heading-text-color absolute left-0 top-0 z-50 h-[44px]`}>
 		{#if header}
-			{@render header?.({ md })}
+			{@render header({ md })}
 		{:else}
 			<div class="flex h-full items-center space-x-3 p-3">
 				<button
@@ -51,9 +51,13 @@
 					class="hover-scale-sm"
 					aria-label="Toggle Drawer"
 				>
-					<PanelLeft class="size-5" />
+					{#if open}
+						<PanelLeftClose class="size-6" strokeWidth={1.5} />
+					{:else}
+						<PanelLeftOpen class="size-6" strokeWidth={1.5} />
+					{/if}
 				</button>
-				<span class="text-xl drop-shadow">{title}</span>
+				<span class="font-black">{title}</span>
 			</div>
 		{/if}
 	</div>
@@ -73,13 +77,13 @@
 				: 'left-0'}"
 		>
 			<div class="h-[100svh] w-full">
-				{@render children({ md })}
+				{@render children?.()}
 			</div>
 		</div>
 	{:else}
 		<div class="h-[100svh] w-full {styles}">
 			<div class="h-full w-full">
-				{@render children({ md })}
+				{@render children?.()}
 			</div>
 		</div>
 		<button

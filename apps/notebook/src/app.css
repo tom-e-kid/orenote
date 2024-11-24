@@ -69,6 +69,10 @@
 		@apply placeholder-gray-300 dark:placeholder-gray-600;
 	}
 
+	.heading-text-color {
+		@apply text-gray-700 dark:text-white;
+	}
+
 	.divide-color {
 		@apply divide-gray-200 dark:divide-gray-700;
 	}

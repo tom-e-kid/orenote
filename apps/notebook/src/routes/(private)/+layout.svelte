@@ -8,8 +8,8 @@
 </script>
 
 <Drawer bind:open>
-	{#snippet header()}
-		<Title bind:open />
+	{#snippet header({ md })}
+		<Title {md} bind:open />
 	{/snippet}
 	{#snippet drawer({ md })}
 		<Navigation {md} bind:open />

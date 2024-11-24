@@ -5,19 +5,30 @@
 		autoUpdate,
 		computePosition,
 		offset,
-		shift
+		shift,
+		type Placement
 	} from '@floating-ui/dom'
-	import { onMount } from 'svelte'
+	import { onMount, type Snippet } from 'svelte'
+
+	interface Props {
+		class?: string
+		buttonClass?: string
+		placement?: Placement
+		dismissOnOutsideClick?: boolean
+		pop?: boolean
+		popover: Snippet
+		children?: Snippet
+	}
 
 	let {
 		class: className = 'secondary-background-color w-[max-content] px-3 py-1 shadow-xl rounded-xl',
 		buttonClass = '',
 		placement,
 		dismissOnOutsideClick = true,
-		pop = $bindable(false),
+		pop = false,
 		popover,
 		children
-	} = $props()
+	}: Props = $props()
 
 	let reference: HTMLButtonElement
 	let floating: HTMLDivElement
@@ -97,7 +108,7 @@
 </script>
 
 <button bind:this={reference} type="button" class={buttonClass} onclick={toggle}>
-	{@render children()}
+	{@render children?.()}
 </button>
 
 <div bind:this={floating} class="absolute z-50 {className} {pop ? 'block' : 'hidden'}">

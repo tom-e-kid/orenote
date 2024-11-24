@@ -35,7 +35,7 @@
 
 <div class="relative w-[max-content] {open ? 'z-10' : 'z-0'}" bind:this={menu}>
 	<button type="button" class="flex items-center" onclick={toggle} aria-label="Operation Menu">
-		<Ellipsis class="size-5" />
+		<Ellipsis class="size-5" strokeWidth={1.5} />
 	</button>
 	<div
 		class="secondary-background-color border-color absolute right-1 top-1 w-[200px] rounded-lg border shadow {open

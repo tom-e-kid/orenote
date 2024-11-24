@@ -77,8 +77,9 @@
 	}
 
 	const linkStyle = $derived((href: string) => {
-		if ($page.url.pathname.startsWith(href)) return 'bg-gray-200 dark:bg-gray-800 selected'
-		return ''
+		if ($page.url.pathname.startsWith(href))
+			return 'bg-gray-200 dark:bg-gray-800 selected hover:bg-gray-200 hover:dark:bg-gray-800'
+		return 'hover:bg-gray-200 hover:dark:bg-gray-800'
 	})
 
 	onMount(async () => {
@@ -91,13 +92,13 @@
 	<header class="h-[44px]"></header>
 	<section>
 		<ul class="space-y-1">
-			<li class="flex h-[32px] items-center rounded px-2 hover:bg-gray-200 hover:dark:bg-gray-800">
+			<li class="flex h-[32px] items-center rounded px-2">
 				<a
 					href="/calendar"
 					class="flex h-full grow items-center truncate"
 					onclick={handleTransition}
 				>
-					<CalendarDays class="mr-2 size-4" />
+					<CalendarDays class="mr-2 size-5" strokeWidth={1.5} />
 					<span class="truncate">{$t('common.calendar')}</span>
 				</a>
 			</li>
@@ -107,11 +108,7 @@
 		<h3 class="text-xs font-semibold">{$t('common.docs')}</h3>
 		<ul class="space-y-1">
 			{#each $docs as doc}
-				<li
-					class="flex h-[32px] items-center rounded px-2 hover:bg-gray-200 hover:dark:bg-gray-800 {linkStyle(
-						`/docs/${doc.did}`
-					)}"
-				>
+				<li class="flex h-[32px] items-center rounded px-2 {linkStyle(`/docs/${doc.did}`)}">
 					<a
 						href={`/docs/${doc.did}`}
 						class="flex h-full grow items-center truncate"
