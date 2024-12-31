@@ -29,7 +29,8 @@
 		"@tiptap/starter-kit": "2.11.0",
 		"date-fns": "4.1.0",
 		"lucide-svelte": "0.469.0",
-		"sveltekit-i18n": "2.4.2"
+		"sveltekit-i18n": "2.4.2",
+		"tiptap-markdown": "0.8.10"
 	},
 	"devDependencies": {
 		"@playwright/test": "1.49.1",

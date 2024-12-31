@@ -8,6 +8,7 @@
 	import StarterKit from '@tiptap/starter-kit'
 	import { format } from 'date-fns'
 	import { onDestroy, onMount } from 'svelte'
+	import { Markdown } from 'tiptap-markdown'
 	import type { PageData } from './$types'
 
 	interface Props {
@@ -133,6 +134,10 @@
 				StarterKit,
 				Placeholder.configure({
 					placeholder: placeholderRandom()
+				}),
+				Markdown.configure({
+					transformPastedText: true,
+					transformCopiedText: true
 				})
 			],
 			content,
