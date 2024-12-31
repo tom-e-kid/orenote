@@ -11,10 +11,10 @@
 		"db:generate": "turbo run db:generate"
 	},
 	"devDependencies": {
-		"prettier": "3.3.3",
+		"prettier": "3.4.2",
 		"prettier-plugin-svelte": "3.3.2",
 		"prettier-plugin-tailwindcss": "0.6.9",
-		"turbo": "2.3.1"
+		"turbo": "2.3.3"
 	},
 	"engines": {
 		"node": "20"
